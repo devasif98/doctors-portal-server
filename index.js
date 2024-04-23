@@ -60,23 +60,8 @@ async function run(){
             res.send(options);
         })
 
-        /*
-        *API Name Convention
-        *app.get('/bookings')
-        *app.get('/bookings/:id')
-        *app.post('/bookings')
-        *app.patch('/bookings/:id')
-        *app.delete('/bookings/:id')
-        */ 
-
-
-        app.get('/bookings', verifyJWT, async(req, res)=>{
+        app.get('/bookings', async(req, res)=>{
             const email = req.query.email;
-            // const decodedEmail = req.decoded.email;
-            // if(email !== decodedEmail){
-            //     return res.status(403).send({message: 'forbidden access'});
-            // }
-            console.log('token:', req.headers.authorization);
             const query = {email: email};
             const bookings = await bookingsCollection.find(query).toArray();
             res.send(bookings);
@@ -109,7 +94,7 @@ async function run(){
             const query = {email: email}
             const user = await usersCollection.findOne(query);
             if(user){
-                const token = jwt.sign({email}, process.env.ACCESS_TOKEN, {expiresIn: '30D'})
+                const token = jwt.sign({email}, process.env.ACCESS_TOKEN, {expiresIn: '1D'})
                 return res.send({accessToken: token})
             }
             res.status(403).send({accessToken: ''})
