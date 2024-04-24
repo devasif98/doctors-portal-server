@@ -106,20 +106,15 @@ async function run() {
             const result = await usersCollection.insertOne(user);
             res.send(result);
         })
-        app.get('/users/:email', async (req, res) => {
-            const email = req.params.email;
-            const query = { email: email };
+        app.get('/users', async (req, res) => {
             try {
-                const user = await usersCollection.findOne(query);
-                if (!user) {
-                    return res.status(404).send({ message: 'User not found' });
-                }
-                res.send(user);
+                const allUsers = await usersCollection.find({}).toArray();
+                res.send(allUsers);
             } catch (error) {
-                console.error('Error retrieving user:', error);
+                console.error('Error retrieving users:', error);
                 res.status(500).send({ message: 'Internal server error' });
             }
-        });
+        });        
 
 
     }
