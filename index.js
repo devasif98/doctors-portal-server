@@ -100,32 +100,12 @@ async function run(){
             res.status(403).send({accessToken: ''})
         })
 
-        // app.post('/users', async(req, res)=>{
-        //     const user = req.body;
-        //     console.log(user);
-        //     const result = await usersCollection.insertOne(user);
-        //     res.send(result);
-        // })
-
-        app.post('/users', async (req, res) => {
+        app.post('/users', async(req, res)=>{
             const user = req.body;
-            const { email } = user;
-        
-            // Check if user with the same email already exists
-            const existingUser = await usersCollection.findOne({ email });
-            if (existingUser) {
-                return res.status(400).send({ message: 'User with this email already exists' });
-            }
-        
-            // User does not exist, proceed to insert into the database
-            try {
-                const result = await usersCollection.insertOne(user);
-                res.send(result);
-            } catch (error) {
-                console.error('Error saving user:', error);
-                res.status(500).send({ message: 'Internal server error' });
-            }
-        });
+            console.log(user);
+            const result = await usersCollection.insertOne(user);
+            res.send(result);
+        })
         
     }
     finally{
