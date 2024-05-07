@@ -216,6 +216,27 @@ async function run() {
                     res.status(500).send(error);
                 });
         });
+        app.post("/uploadUsersPhoto", upload.single("imageFile"), (req, res) => {
+            if (!req.file) {
+
+                res.status(400).send("No file uploaded.");
+                return;
+            }
+            const storageRef = ref(storage, `users/${req.file.originalname}`);
+            const metadata = {
+                contentType: "image/jpeg",
+            };
+            uploadBytes(storageRef, req.file.buffer, metadata)
+                .then(() => {
+                    getDownloadURL(storageRef).then((url) => {
+                        res.send({ url });
+                    });
+                })
+                .catch((error) => {
+                    console.error(error);
+                    res.status(500).send(error);
+                });
+        });
         app.post("/addDoctor", async (req, res) => {
             const upLoaded = req.body;
             const result = await doctorsCollection.insertOne(upLoaded);
